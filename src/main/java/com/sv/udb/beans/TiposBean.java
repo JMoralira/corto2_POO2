@@ -5,7 +5,6 @@
  */
 package com.sv.udb.beans;
 
-import com.sv.udb.controladores.TiposCtrl;
 import com.sv.udb.modelos.Tipos;
 import java.io.Serializable;
 import java.util.List;
@@ -53,7 +52,7 @@ public class TiposBean implements Serializable{
     public void init()
     {
         this.objeTipo = new Tipos();
-        this.listTipo = new TiposCtrl().cons();
+        //this.listTipo = new TiposCtrl().cons();
     }
     
     public void nuev()
@@ -69,7 +68,7 @@ public class TiposBean implements Serializable{
         RequestContext ctx = RequestContext.getCurrentInstance(); //Capturo el contexto de la página
         Map<String, String> mapaPrms = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         int codi = Integer.parseInt(mapaPrms.get("codiTipo"));
-        this.objeTipo = new TiposCtrl().cons(codi);
+        //this.objeTipo = new TiposCtrl().cons(codi);
         this.guardando = false;
         ctx.execute("$('#modaFormTipo').modal('show')");
     }
@@ -77,49 +76,59 @@ public class TiposBean implements Serializable{
     public void guar()
     {
         RequestContext ctx = RequestContext.getCurrentInstance(); //Capturo el contexto de la página
-        if(new TiposCtrl().guar(this.objeTipo))
+        try
         {
             this.listTipo.add(this.objeTipo);
             this.objeTipo = new Tipos();
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos guardados')");
-            System.err.println("Guardó");
         }
-        else
+        catch(Exception ex)
         {
-            ctx.execute("setMessage('MESS_ERRO', 'Atención', 'No se guardó')");
-            System.err.println("No guardó");
+            ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al guardar ')");
+        }
+        finally
+        {
+            
         }
     }
     
     public void edit()
     {
         RequestContext ctx = RequestContext.getCurrentInstance(); //Capturo el contexto de la página
-        if(new TiposCtrl().edit(this.objeTipo))
+        try
         {
             this.setItem(this.objeTipo);
             this.objeTipo = new Tipos();
             this.guardando = true;
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos modificados')");
         }
-        else
+        catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'No se modificó')");
+        }
+        finally
+        {
+            
         }
     }
     
     public void elim()
     {
         RequestContext ctx = RequestContext.getCurrentInstance(); //Capturo el contexto de la página
-        if(new TiposCtrl().dele(this.objeTipo))
+        try
         {
             this.listTipo.remove(this.objeTipo);
             this.objeTipo = new Tipos();
             this.guardando = true;
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos eliminados')");
         }
-        else
+        catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'No se eliminó')");
+        }
+        finally
+        {
+            
         }
     }
     
